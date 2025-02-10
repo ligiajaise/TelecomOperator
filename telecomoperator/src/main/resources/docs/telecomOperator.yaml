@@ -1,0 +1,101 @@
+openapi: 3.0.1
+info:
+  title: Telecom API
+  description: API for managing phone numbers associated with customers
+  version: 1.0.0
+paths:
+  /api/v1/phones:
+    get:
+      summary: Get all phone numbers
+      description: Retrieve a list of all phone numbers in the system.
+      operationId: getAllPhoneNumbers
+      responses:
+        '200':
+          description: A list of all phone numbers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PhoneNumber'
+  /api/v1/phones/{customerId}:
+    get:
+      summary: Get all phone numbers of a single customer
+      description: Retrieve all phone numbers associated with a specific customer.
+      operationId: getPhoneNumbersByCustomerId
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: The ID of the customer to retrieve phone numbers for.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List phone numbers for the customer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PhoneNumber'
+        '404':
+          description: No phone numbers found for the customer
+  /api/v1/phones/{customerId}/activate/{phoneNumber}:
+    put:
+      summary: Activate a phone number for the customer
+      description: Activate a specific phone number by changing its status.
+      operationId: activatePhoneNumber
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Customer Number.
+          schema:
+            type: string
+        - name: phoneNumber
+          in: path
+          required: true
+          description: The phone number to activate.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Phone number activated successfully
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Phone number 9888888888 activated successfully.
+        '404':
+          description: Phone number not found
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Phone number 9888888889 not found.
+components:
+  schemas:
+    PhoneNumber:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          example: '9888888888'
+        isActive:
+          type: boolean
+          example: false
+    Customer:
+      type: object
+      properties:
+        customerId:
+          type: string
+          example: 11
+        customerName:
+          type: string
+          example: customer1
+        phoneNumber:
+          type: array
+          items:
+                  $ref: '#/components/schemas/PhoneNumber'
+        
